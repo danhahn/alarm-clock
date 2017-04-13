@@ -1,39 +1,15 @@
-const label = {
-  AM: 'am',
-  PM: 'pm',
-  SET_ALARM: 'Set New Alarm',
-  TURN_OFF: 'Turn Alarm Off',
-}
+import label from './labels';
+import {
+  formatHour,
+  formatTime,
+  monthNames,
+  calcuateSecondsSinceMidnight
+} from './utils/common';
+import buildDropDown from './utils/buildDropDown';
+import getCurrentTime from './utils/getCurrentTime';
+import formatFullTime from './utils/formatFullTime';
+import displaySetAlarm from './displaySetAlarm';
 
-const formatHour = (hour) => hour > 12 ? hour-12 : hour;
-const formatTime = (part) => part < 10 ? `0${part}` : part;
-const monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
-const calcuateSecondsSinceMidnight = ({hours, minutes, seconds, dayPart}) => (parseInt(hours) * 3600) + (parseInt(minutes) * 60) + parseInt(seconds);
-
-const buildDropDown = (units) => {
-  // build drop down hours.
-  if(units === 24) {
-    return [...'*'.repeat(12)].map((item, i) => `<option value="${i}">${i === 0 ? 12 : i}</option>`).join('');
-  }
-  return [...'*'.repeat(units)].map((item, i) => `<option value="${i}">${i}</option>`).join('');
-};
-
-const getCurrentTime = function getCurrentTime() {
-  const now = new Date();
-  return {
-    hours: now.getHours(),
-    minutes: now.getMinutes(),
-    seconds: now.getSeconds(),
-    month: monthNames[now.getMonth()],
-    day: now.getDate(),
-    year: now.getFullYear(),
-    dayPart: now.getHours() >= 12 ? label.PM : label.AM,
-  };
-};
-
-const formatFullTime = function formatFullTime(hours, minutes, seconds, dayPart) {
-  return `${formatHour(hours)}:${formatTime(minutes)}:${formatTime(seconds)}${dayPart}`;
-}
 
 const getAlarmTime = function setAlarm() {
   return {
@@ -72,20 +48,7 @@ const displayClock = function displayClock() {
   `;
 };
 
-const displaySetAlarm = function displaySetAlarm() {
-  return `
-    <div class="set-alarm-container">
-      <select name="" id="setHours">${buildDropDown(24)}</select>
-      <select name="" id="setMinutes">${buildDropDown(60)}</select>
-      <select name="" id="setSeconds">${buildDropDown(60)}</select>
-      <select name="" id="setAmPm">
-        <option value="${label.AM}">${label.AM}</option>
-        <option value="${label.PM}">${label.PM}</option>
-      </select>
-      <button id="setAlarm">${label.SET_ALARM}</button>
-    </div>
-  `;
-};
+
 
 const displayAlarmList = function displayAlarmList(alarms) {
   return `<ul class="alarm-list">
